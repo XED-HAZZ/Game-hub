@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,354 +7,344 @@
     <title>GAME HUB</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-                /* ═══════════════════════════════════════════════════════
-           ROOT / RESET
-        ═══════════════════════════════════════════════════════ */
-                *, *::before, *::after {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --c-bg: #0a0a0f;
+            --c-surface: #111118;
+            --c-border: #1e1e2e;
+            --c-accent1: #00e5ff;
+            --c-accent2: #ff3d71;
+            --c-accent3: #ffcc00;
+            --c-accent4: #00ff88;
+            --c-accent5: #ff4444;
+            --c-text: #e8e8f0;
+            --c-muted: #5a5a7a;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--c-bg);
+            color: var(--c-text);
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        /* VIEWS */
+        .view {
+            position: fixed;
+            inset: 0;
+            display: none;
+        }
+
+            .view.active {
+                display: block;
+            }
+
+        /* HUB */
+        #hub {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: var(--c-bg);
+            overflow: hidden;
+            position: relative;
+        }
+
+            #hub.active {
+                display: flex;
+            }
+
+            #hub::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+                background-size: 48px 48px;
+                animation: gridScroll 20s linear infinite;
+            }
+
+        @keyframes gridScroll {
+            to {
+                background-position: 48px 48px;
+            }
+        }
+
+        #hub::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse 60% 40% at 20% 50%, rgba(0,229,255,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 80% 30%, rgba(255,61,113,0.06) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 60% 80%, rgba(255,204,0,0.05) 0%, transparent 60%), radial-gradient(ellipse 45% 35% at 40% 20%, rgba(0,255,136,0.05) 0%, transparent 60%);
+        }
+
+        .hub-logo {
+            position: relative;
+            z-index: 2;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 8vw, 96px);
+            letter-spacing: 0.18em;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(0,229,255,0.4), 0 0 20px rgba(0,229,255,0.2);
+            margin-bottom: 8px;
+            animation: fadeDown 0.7s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        .hub-sub {
+            position: relative;
+            z-index: 2;
+            font-size: 13px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--c-muted);
+            margin-bottom: 64px;
+            animation: fadeDown 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Game cards */
+        .game-grid {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            gap: 22px;
+            align-items: stretch;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1400px;
+            padding: 0 20px;
+            animation: fadeUp 0.8s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(32px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-card {
+            width: clamp(160px, 18vw, 240px);
+            background: var(--c-surface);
+            border: 1.5px solid var(--c-border);
+            border-radius: 20px;
+            padding: 32px 24px 24px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), border-color 0.2s, box-shadow 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .game-card::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                transition: opacity 0.25s;
+                border-radius: 20px;
+            }
+
+            .game-card:hover {
+                transform: translateY(-8px) scale(1.02);
+            }
+
+                .game-card:hover::before {
+                    opacity: 1;
                 }
 
-                :root {
-                    --c-bg: #0a0a0f;
-                    --c-surface: #111118;
-                    --c-border: #1e1e2e;
-                    --c-accent1: #00e5ff;
-                    --c-accent2: #ff3d71;
-                    --c-accent3: #ffcc00;
-                    --c-accent4: #00ff88;
-                    --c-text: #e8e8f0;
-                    --c-muted: #5a5a7a;
-                }
+            .game-card:active {
+                transform: translateY(-4px) scale(1.01);
+            }
 
-                html, body {
-                    height: 100%;
-                    background: var(--c-bg);
-                    color: var(--c-text);
-                    overflow: hidden;
-                }
+        .card-football {
+            --accent: var(--c-accent1);
+        }
 
-                body {
-                    font-family: 'Barlow Condensed', sans-serif;
-                }
+        .card-cookie {
+            --accent: var(--c-accent3);
+        }
 
-                /* ═══════════════════════════════════════════════════════
-           VIEWS
-        ═══════════════════════════════════════════════════════ */
-                .view {
-                    position: fixed;
-                    inset: 0;
-                    display: none;
-                }
+        .card-rocket {
+            --accent: var(--c-accent2);
+        }
 
-                    .view.active {
-                        display: block;
-                    }
+        .card-siege {
+            --accent: var(--c-accent4);
+        }
 
-                /* ═══════════════════════════════════════════════════════
-           HUB / LOBBY
-        ═══════════════════════════════════════════════════════ */
-                #hub {
-                    display: none;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100%;
-                    background: var(--c-bg);
-                    overflow: hidden;
-                    position: relative;
-                }
+        .card-mines {
+            --accent: var(--c-accent5);
+        }
 
-                    #hub.active {
-                        display: flex;
-                    }
+        .game-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 25%, transparent), 0 20px 40px rgba(0,0,0,0.4);
+        }
 
-                    /* Animated grid background */
-                    #hub::before {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-                        background-size: 48px 48px;
-                        animation: gridScroll 20s linear infinite;
-                    }
+        .game-card::before {
+            background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%);
+        }
 
-                @keyframes gridScroll {
-                    to {
-                        background-position: 48px 48px;
-                    }
-                }
+        .card-icon {
+            font-size: 60px;
+            line-height: 1;
+            filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 50%, transparent));
+            transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), filter 0.3s;
+        }
 
-                /* Glow blobs */
-                #hub::after {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    pointer-events: none;
-                    background: radial-gradient(ellipse 60% 40% at 20% 50%, rgba(0,229,255,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 80% 30%, rgba(255,61,113,0.06) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 60% 80%, rgba(255,204,0,0.05) 0%, transparent 60%), radial-gradient(ellipse 45% 35% at 40% 20%, rgba(0,255,136,0.05) 0%, transparent 60%);
-                }
+        .game-card:hover .card-icon {
+            transform: scale(1.15) rotate(-3deg);
+            filter: drop-shadow(0 0 28px color-mix(in srgb, var(--accent) 80%, transparent));
+        }
 
-                .hub-logo {
-                    position: relative;
-                    z-index: 2;
-                    font-family: 'Bebas Neue', sans-serif;
-                    font-size: clamp(48px, 8vw, 96px);
-                    letter-spacing: 0.18em;
-                    color: #fff;
-                    text-shadow: 0 0 60px rgba(0,229,255,0.4), 0 0 20px rgba(0,229,255,0.2);
-                    margin-bottom: 8px;
-                    animation: fadeDown 0.7s cubic-bezier(0.22,1,0.36,1) both;
-                }
+        .card-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--accent);
+            opacity: 0.7;
+        }
 
-                .hub-sub {
-                    position: relative;
-                    z-index: 2;
-                    font-size: 13px;
-                    letter-spacing: 6px;
-                    text-transform: uppercase;
-                    color: var(--c-muted);
-                    margin-bottom: 64px;
-                    animation: fadeDown 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
-                }
+        .card-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 3px;
+            color: #fff;
+            text-align: center;
+            line-height: 1;
+        }
 
-                @keyframes fadeDown {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-18px);
-                    }
+        .card-desc {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: var(--c-muted);
+            text-align: center;
+            line-height: 1.5;
+        }
 
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
+        .card-play {
+            margin-top: 8px;
+            width: 100%;
+            padding: 10px 0;
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            border-radius: 8px;
+            color: var(--accent);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
 
-                /* Game cards */
-                .game-grid {
-                    position: relative;
-                    z-index: 2;
-                    display: flex;
-                    gap: 22px;
-                    align-items: stretch;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    max-width: 1260px;
-                    padding: 0 20px;
-                    animation: fadeUp 0.8s 0.2s cubic-bezier(0.22,1,0.36,1) both;
-                }
+        .game-card:hover .card-play {
+            background: var(--accent);
+            color: #000;
+        }
 
-                @keyframes fadeUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(32px);
-                    }
+        .hub-footer {
+            position: absolute;
+            bottom: 28px;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--c-muted);
+            z-index: 2;
+            text-transform: uppercase;
+        }
 
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
+        /* GAME WRAPPER */
+        .game-view {
+            position: fixed;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+        }
 
-                .game-card {
-                    width: clamp(180px, 20vw, 260px);
-                    background: var(--c-surface);
-                    border: 1.5px solid var(--c-border);
-                    border-radius: 20px;
-                    padding: 32px 24px 24px;
-                    cursor: pointer;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 14px;
-                    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), border-color 0.2s, box-shadow 0.25s;
-                    position: relative;
-                    overflow: hidden;
-                }
+            .game-view.active {
+                display: flex;
+            }
 
-                    .game-card::before {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        opacity: 0;
-                        transition: opacity 0.25s;
-                        border-radius: 20px;
-                    }
+        .game-topbar {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-                    .game-card:hover {
-                        transform: translateY(-8px) scale(1.02);
-                    }
+        .back-btn {
+            background: rgba(0,0,0,0.75);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: background 0.2s, border-color 0.2s;
+        }
 
-                        .game-card:hover::before {
-                            opacity: 1;
-                        }
+            .back-btn:hover {
+                background: rgba(255,255,255,0.1);
+                border-color: rgba(255,255,255,0.5);
+            }
 
-                    .game-card:active {
-                        transform: translateY(-4px) scale(1.01);
-                    }
+        .iframe-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
 
-                /* Per-card accent */
-                .card-football {
-                    --accent: var(--c-accent1);
-                }
-
-                .card-cookie {
-                    --accent: var(--c-accent3);
-                }
-
-                .card-rocket {
-                    --accent: var(--c-accent2);
-                }
-
-                .card-siege {
-                    --accent: var(--c-accent4);
-                }
-
-                .game-card:hover {
-                    border-color: var(--accent);
-                    box-shadow: 0 0 32px color-mix(in srgb, var(--accent) 25%, transparent), 0 20px 40px rgba(0,0,0,0.4);
-                }
-
-                .game-card::before {
-                    background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%);
-                }
-
-                .card-icon {
-                    font-size: 60px;
-                    line-height: 1;
-                    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 50%, transparent));
-                    transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), filter 0.3s;
-                }
-
-                .game-card:hover .card-icon {
-                    transform: scale(1.15) rotate(-3deg);
-                    filter: drop-shadow(0 0 28px color-mix(in srgb, var(--accent) 80%, transparent));
-                }
-
-                .card-number {
-                    font-family: 'Bebas Neue', sans-serif;
-                    font-size: 11px;
-                    letter-spacing: 4px;
-                    color: var(--accent);
-                    opacity: 0.7;
-                }
-
-                .card-title {
-                    font-family: 'Bebas Neue', sans-serif;
-                    font-size: 26px;
-                    letter-spacing: 3px;
-                    color: #fff;
-                    text-align: center;
-                    line-height: 1;
-                }
-
-                .card-desc {
-                    font-size: 12px;
-                    letter-spacing: 1px;
-                    color: var(--c-muted);
-                    text-align: center;
-                    line-height: 1.5;
-                }
-
-                .card-play {
-                    margin-top: 8px;
-                    width: 100%;
-                    padding: 10px 0;
-                    background: transparent;
-                    border: 1.5px solid var(--accent);
-                    border-radius: 8px;
-                    color: var(--accent);
-                    font-family: 'Bebas Neue', sans-serif;
-                    font-size: 16px;
-                    letter-spacing: 3px;
-                    cursor: pointer;
-                    transition: background 0.2s, color 0.2s;
-                }
-
-                .game-card:hover .card-play {
-                    background: var(--accent);
-                    color: #000;
-                }
-
-                /* Footer */
-                .hub-footer {
-                    position: absolute;
-                    bottom: 28px;
-                    font-size: 11px;
-                    letter-spacing: 3px;
-                    color: var(--c-muted);
-                    z-index: 2;
-                    text-transform: uppercase;
-                }
-
-                /* ═══════════════════════════════════════════════════════
-           GAME WRAPPER
-        ═══════════════════════════════════════════════════════ */
-                .game-view {
-                    position: fixed;
-                    inset: 0;
-                    display: none;
-                    flex-direction: column;
-                }
-
-                    .game-view.active {
-                        display: flex;
-                    }
-
-                .game-topbar {
-                    position: absolute;
-                    top: 18px;
-                    right: 18px;
-                    z-index: 999;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                .back-btn {
-                    background: rgba(0,0,0,0.75);
-                    border: 1.5px solid rgba(255,255,255,0.2);
-                    color: #fff;
-                    font-family: 'Bebas Neue', sans-serif;
-                    font-size: 14px;
-                    letter-spacing: 3px;
-                    padding: 8px 20px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    backdrop-filter: blur(6px);
-                    transition: background 0.2s, border-color 0.2s;
-                }
-
-                    .back-btn:hover {
-                        background: rgba(255,255,255,0.1);
-                        border-color: rgba(255,255,255,0.5);
-                    }
-
-                .iframe-wrap {
-                    flex: 1;
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                    .iframe-wrap iframe {
-                        position: absolute;
-                        inset: 0;
-                        width: 100%;
-                        height: 100%;
-                        border: none;
-                    }
+            .iframe-wrap iframe {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
     </style>
 </head>
 <body>
 
-    <!-- ════════════════════════════════════════ HUB ════ -->
+    <!-- HUB -->
     <div id="hub" class="active">
         <div class="hub-logo">GAME HUB</div>
         <div class="hub-sub">Select a game to play</div>
-
         <div class="game-grid">
 
-            <!-- Card 1: Football -->
             <div class="game-card card-football" onclick="openGame('football')">
                 <div class="card-number">01</div>
                 <div class="card-icon">⚽</div>
@@ -364,7 +353,6 @@
                 <button class="card-play">Play Now</button>
             </div>
 
-            <!-- Card 2: Cookie Clicker -->
             <div class="game-card card-cookie" onclick="openGame('cookie')">
                 <div class="card-number">02</div>
                 <div class="card-icon">🍪</div>
@@ -373,7 +361,6 @@
                 <button class="card-play">Play Now</button>
             </div>
 
-            <!-- Card 3: Rocket League -->
             <div class="game-card card-rocket" onclick="openGame('rocket')">
                 <div class="card-number">03</div>
                 <div class="card-icon">🚀</div>
@@ -382,7 +369,6 @@
                 <button class="card-play">Play Now</button>
             </div>
 
-            <!-- Card 4: Sky Siege -->
             <div class="game-card card-siege" onclick="openGame('siege')">
                 <div class="card-number">04</div>
                 <div class="card-icon">🏰</div>
@@ -391,53 +377,49 @@
                 <button class="card-play">Play Now</button>
             </div>
 
+            <div class="game-card card-mines" onclick="openGame('mines')">
+                <div class="card-number">05</div>
+                <div class="card-icon">💎</div>
+                <div class="card-title">Mines</div>
+                <div class="card-desc">Bet big, dodge bombs &amp; cash out before you hit a mine</div>
+                <button class="card-play">Play Now</button>
+            </div>
+
         </div>
-        <div class="hub-footer">4 Games · Click any card to play</div>
+        <div class="hub-footer">5 Games · Click any card to play</div>
     </div>
 
-    <!-- ════════════════════════════════════ FOOTBALL ════ -->
+    <!-- FOOTBALL -->
     <div id="view-football" class="game-view">
-        <div class="game-topbar">
-            <button class="back-btn" onclick="goHub()">← Hub</button>
-        </div>
-        <div class="iframe-wrap">
-            <iframe id="frame-football" srcdoc="" title="Kickoff 3D"></iframe>
-        </div>
+        <div class="game-topbar"><button class="back-btn" onclick="goHub()">← Hub</button></div>
+        <div class="iframe-wrap"><iframe id="frame-football" srcdoc="" title="Kickoff 3D"></iframe></div>
     </div>
 
-    <!-- ══════════════════════════════════════ COOKIE ════ -->
+    <!-- COOKIE -->
     <div id="view-cookie" class="game-view">
-        <div class="game-topbar">
-            <button class="back-btn" onclick="goHub()">← Hub</button>
-        </div>
-        <div class="iframe-wrap">
-            <iframe id="frame-cookie" srcdoc="" title="Cookie Clicker"></iframe>
-        </div>
+        <div class="game-topbar"><button class="back-btn" onclick="goHub()">← Hub</button></div>
+        <div class="iframe-wrap"><iframe id="frame-cookie" srcdoc="" title="Cookie Clicker"></iframe></div>
     </div>
 
-    <!-- ══════════════════════════════════════ ROCKET ════ -->
+    <!-- ROCKET -->
     <div id="view-rocket" class="game-view">
-        <div class="game-topbar">
-            <button class="back-btn" onclick="goHub()">← Hub</button>
-        </div>
-        <div class="iframe-wrap">
-            <iframe id="frame-rocket" srcdoc="" title="Rocket League"></iframe>
-        </div>
+        <div class="game-topbar"><button class="back-btn" onclick="goHub()">← Hub</button></div>
+        <div class="iframe-wrap"><iframe id="frame-rocket" srcdoc="" title="Rocket League"></iframe></div>
     </div>
 
-    <!-- ══════════════════════════════════════ SIEGE ═════ -->
+    <!-- SIEGE -->
     <div id="view-siege" class="game-view">
-        <div class="game-topbar">
-            <button class="back-btn" onclick="goHub()">← Hub</button>
-        </div>
-        <div class="iframe-wrap">
-            <iframe id="frame-siege" srcdoc="" title="Sky Siege"></iframe>
-        </div>
+        <div class="game-topbar"><button class="back-btn" onclick="goHub()">← Hub</button></div>
+        <div class="iframe-wrap"><iframe id="frame-siege" srcdoc="" title="Sky Siege"></iframe></div>
+    </div>
+
+    <!-- MINES -->
+    <div id="view-mines" class="game-view">
+        <div class="game-topbar"><button class="back-btn" onclick="goHub()">← Hub</button></div>
+        <div class="iframe-wrap"><iframe id="frame-mines" srcdoc="" title="Mines"></iframe></div>
     </div>
 
     <script>
-        // ── GAME SRCDOCS ──────────────────────────────────────────────────
-
         const FOOTBALL_SRC = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -449,12 +431,7 @@
         body { background: #000; overflow: hidden; font-family: 'Arial Black', sans-serif; }
         #canvas { display: block; }
         #ui { position: fixed; top: 0; left: 0; width: 100%; pointer-events: none; font-family: 'Arial Black', Arial, sans-serif; }
-        #scoreboard {
-        position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-        background: rgba(0,0,0,0.82); border: 2px solid #00e5ff; border-radius: 12px;
-        padding: 8px 36px; display: flex; align-items: center; gap: 28px;
-        box-shadow: 0 0 24px #00e5ff55; min-width: 320px; justify-content: center;
-        }
+        #scoreboard { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.82); border: 2px solid #00e5ff; border-radius: 12px; padding: 8px 36px; display: flex; align-items: center; gap: 28px; box-shadow: 0 0 24px #00e5ff55; min-width: 320px; justify-content: center; }
         .team-name { color: #fff; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
         .score { color: #00e5ff; font-size: 36px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 12px #00e5ff; }
         .score-divider { color: #fff; font-size: 28px; opacity: 0.4; }
@@ -930,7 +907,7 @@
         function darkenHex(hex,amt){return lightenHex(hex,-amt);}
         canvas.addEventListener('mousemove',e=>{const rect=canvas.getBoundingClientRect();const mx=(e.clientX-rect.left)*(W/rect.width),my=(e.clientY-rect.top)*(H/rect.height);const gc=fromIso(mx,my);if(gc.x>=0&&gc.x<GRID_W&&gc.y>=0&&gc.y<GRID_H){hoverCell=gc;}else{hoverCell=null;}});
         canvas.addEventListener('mouseleave',()=>{hoverCell=null;});
-        canvas.addEventListener('click',e=>{if(!gameStarted||!selectedType||gameOver||victory)return;const rect=canvas.getBoundingClientRect();const mx=(e.clientX-rect.left)*(W/rect.width),my=(e.clientY-rect.top)*(H/rect.height);const gc=fromIso(mx,my);if(!gc||gc.x<0||gc.x>=GRID_W-1||gc.y<0||gc.y>=GRID_H-1)return;if(pathSet.has(gc.x+','+gc.y)){showMsg('❌ Cannot place on path!');return;}if(towers.find(t=>t.gx===gc.x&&t.gy===gc.y)){showMsg('❌ Tile already occupied!');return;}const def=TOWER_DEFS[selectedType];if(gold<def.cost){showMsg('❌ Not enough gold!');return;}gold-=def.cost;const p=toIso(gc.x+0.5,gc.y+0.5);towers.push({type:selectedType,gx:gc.x,gy:gc.y,wx:p.x,wy:p.y,cooldown:0,aimTarget:null});showMsg('✓ '+def.label+' tower placed!');updateUI();});
+        canvas.addEventListener('click',e=>{if(!gameStarted||!selectedType||gameOver||victory)return;const rect=canvas.getBoundingClientRect();const mx=(e.clientX-rect.left)*(W/rect.width),my=(e.clientY-rect.top)*(H/rect.height);const gc=fromIso(mx,my);if(!gc||gc.x<0||gc.x>=GRID_W-1||gc.y<0||gc.y>=GRID_H-1)return;if(pathSet.has(gc.x+','+gc.y)){showMsg('Cannot place on path!');return;}if(towers.find(t=>t.gx===gc.x&&t.gy===gc.y)){showMsg('Tile already occupied!');return;}const def=TOWER_DEFS[selectedType];if(gold<def.cost){showMsg('Not enough gold!');return;}gold-=def.cost;const p=toIso(gc.x+0.5,gc.y+0.5);towers.push({type:selectedType,gx:gc.x,gy:gc.y,wx:p.x,wy:p.y,cooldown:0,aimTarget:null});showMsg(def.label+' tower placed!');updateUI();});
         document.addEventListener('keydown',e=>{if(e.key==='Escape'){selectedType=null;refreshTowerCards();}});
         function restartGame(){document.getElementById('gameOverScreen').style.display='none';document.getElementById('victoryScreen').style.display='none';initGame();document.getElementById('waveBtn').disabled=false;document.getElementById('waveBtn').textContent='START WAVE 1';document.getElementById('killLog').innerHTML='';}
         let lastTime=0;
@@ -940,12 +917,243 @@
         </body>
         </html>`;
 
+        const MINES_SRC = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mines</title>
+        <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial; }
+        body { background: #07111f; color: white; display: flex; height: 100vh; }
+        .sidebar { width: 320px; background: #121f33; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+        .title { font-size: 28px; font-weight: bold; }
+        .balance { font-size: 22px; }
+        .balance span { color: #00ff88; font-weight: bold; }
+        input { width: 100%; padding: 12px; border: none; border-radius: 10px; background: #1d2b42; color: white; font-size: 18px; }
+        .bet-row { display: flex; gap: 8px; }
+        .half-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; background: #1d2b42; color: #aaa; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.15s; }
+        .half-btn:hover { background: #2a3f60; color: white; }
+        .mines-label { font-size: 14px; color: #aaa; }
+        .mines-select { width: 100%; padding: 10px; border: none; border-radius: 10px; background: #1d2b42; color: white; font-size: 16px; }
+        button.main-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: #00cc66; color: black; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button.main-btn:hover { background: #00ff88; }
+        button.main-btn.cashout { background: #ffaa00; }
+        button.main-btn.cashout:hover { background: #ffcc44; }
+        button.main-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .info { font-size: 16px; color: #aaa; }
+        .info span { color: #ffcc00; font-weight: bold; font-size: 18px; }
+        .profit { font-size: 14px; color: #aaa; }
+        .profit span { color: #00ff88; font-weight: bold; }
+        .game { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(5, 100px); gap: 12px; }
+        .tile { width: 100px; height: 100px; background: #1d3a5c; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; font-size: 40px; user-select: none; border: 2px solid #1d3a5c; position: relative; overflow: hidden; }
+        .tile:hover:not(.revealed) { transform: scale(1.06); border-color: #4488ff; background: #254a72; }
+        .tile.safe { background: #0a2a1a !important; border-color: #00ff88 !important; animation: popIn 0.25s ease; }
+        .tile.mine { background: #3a0a0a !important; border-color: #ff4444 !important; animation: shake 0.3s ease; }
+        .tile.revealed { cursor: default; }
+        .tile.hint { border-color: #ffcc00 !important; background: #2a2200 !important; }
+        @keyframes popIn { 0%{transform:scale(0.85)} 60%{transform:scale(1.1)} 100%{transform:scale(1)} }
+        @keyframes shake { 0%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} 100%{transform:translateX(0)} }
+        .result-msg { font-size: 22px; font-weight: bold; min-height: 28px; }
+        .result-msg.win { color: #00ff88; }
+        .result-msg.lose { color: #ff4444; }
+        .stats-row { display: flex; gap: 20px; font-size: 13px; color: #aaa; }
+        .stat { text-align: center; }
+        .stat .val { font-size: 18px; font-weight: bold; color: white; display: block; }
+        </style>
+        </head>
+        <body>
+        <div class="sidebar">
+        <div class="title">💎 Mines</div>
+        <div class="balance">Balance: $<span id="balance">1000</span></div>
+        <div>
+        <input type="number" id="bet" placeholder="Bet Amount" min="1" value="50">
+        <div class="bet-row" style="margin-top:8px">
+        <button class="half-btn" onclick="setBet(0.5)">½</button>
+        <button class="half-btn" onclick="setBet(2)">2×</button>
+        <button class="half-btn" onclick="setBet('max')">Max</button>
+        </div>
+        </div>
+        <div>
+        <div class="mines-label">Number of Mines</div>
+        <select class="mines-select" id="mineCount">
+        <option value="1">1 Mine</option>
+        <option value="3" selected>3 Mines</option>
+        <option value="5">5 Mines</option>
+        <option value="10">10 Mines</option>
+        <option value="15">15 Mines</option>
+        <option value="20">20 Mines</option>
+        <option value="24">24 Mines</option>
+        </select>
+        </div>
+        <button class="main-btn" id="mainBtn" onclick="handleBtn()">Bet</button>
+        <div class="info">Multiplier: <span id="multi">1.00×</span></div>
+        <div class="profit">Next gem: +<span id="nextWin">—</span></div>
+        <div class="info" style="margin-top:4px">Session Profit: <span id="profit" style="color:#00ff88">$0</span></div>
+        </div>
+        <div class="game">
+        <div class="stats-row">
+        <div class="stat"><span class="val" id="gemsFound">0</span>Gems Found</div>
+        <div class="stat"><span class="val" id="safeLeft">25</span>Safe Tiles</div>
+        <div class="stat"><span class="val" id="minesLeft">3</span>Mines</div>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="result-msg" id="resultMsg"></div>
+        </div>
+        <script>
+        let balance=1000, bet=0, gameActive=false, minePositions=new Set(), revealed=new Set(), gems=0, multiplier=1, sessionProfit=0;
+
+        function setBet(mod){
+        const cur=Number(document.getElementById('bet').value)||0;
+        if(mod==='max') document.getElementById('bet').value=balance;
+        else document.getElementById('bet').value=Math.max(1,Math.floor(cur*mod));
+        }
+
+        function calcMultiplier(gemsFound, totalMines){
+        const safe=25-totalMines;
+        let mult=1;
+        for(let i=0;i<gemsFound;i++) mult*=(25-totalMines-i)/(25-i)*1.04*(1+totalMines*0.05);
+        return Math.max(1, parseFloat(mult.toFixed(4)));
+        }
+
+        function calcNext(gemsFound, totalMines){
+        return calcMultiplier(gemsFound+1, totalMines);
+        }
+
+        function createBoard(){
+        const grid=document.getElementById('grid');
+        grid.innerHTML='';
+        for(let i=0;i<25;i++){
+        const tile=document.createElement('div');
+        tile.classList.add('tile');
+        tile.dataset.idx=i;
+        tile.onclick=()=>clickTile(tile,i);
+        grid.appendChild(tile);
+        }
+        }
+
+        function updateUI(){
+        document.getElementById('balance').textContent=balance;
+        document.getElementById('multi').textContent=multiplier.toFixed(2)+'×';
+        const totalMines=Number(document.getElementById('mineCount').value);
+        const safeLeft=25-totalMines-revealed.size;
+        document.getElementById('gemsFound').textContent=gems;
+        document.getElementById('safeLeft').textContent=safeLeft;
+        document.getElementById('minesLeft').textContent=totalMines;
+        document.getElementById('profit').textContent='$'+sessionProfit;
+        if(gameActive && gems<(25-totalMines)){
+        const next=calcNext(gems,totalMines);
+        const diff=Math.floor(bet*next)-Math.floor(bet*multiplier);
+        document.getElementById('nextWin').textContent='$'+diff+' ('+next.toFixed(2)+'×)';
+        } else {
+        document.getElementById('nextWin').textContent='—';
+        }
+        }
+
+        function handleBtn(){
+        if(!gameActive) startGame();
+        else cashOut();
+        }
+
+        function startGame(){
+        bet=Number(document.getElementById('bet').value);
+        if(!bet||bet<1){setMsg('Enter a valid bet','lose');return;}
+        if(bet>balance){setMsg('Not enough balance','lose');return;}
+        const totalMines=Number(document.getElementById('mineCount').value);
+        balance-=bet;
+        minePositions=new Set();
+        while(minePositions.size<totalMines) minePositions.add(Math.floor(Math.random()*25));
+        revealed=new Set();
+        gems=0;
+        multiplier=1;
+        gameActive=true;
+        createBoard();
+        setMsg('');
+        document.getElementById('mainBtn').textContent='Cash Out';
+        document.getElementById('mainBtn').className='main-btn cashout';
+        document.getElementById('mineCount').disabled=true;
+        updateUI();
+        }
+
+        function clickTile(tile,idx){
+        if(!gameActive||revealed.has(idx)||tile.classList.contains('revealed')) return;
+        const totalMines=Number(document.getElementById('mineCount').value);
+        revealed.add(idx);
+        tile.classList.add('revealed');
+        if(minePositions.has(idx)){
+        tile.classList.add('mine');
+        tile.innerHTML='💣';
+        gameOver(false, totalMines);
+        } else {
+        tile.classList.add('safe');
+        tile.innerHTML='💎';
+        gems++;
+        multiplier=calcMultiplier(gems,totalMines);
+        if(gems===(25-totalMines)){
+        cashOut(true);
+        } else {
+        updateUI();
+        }
+        }
+        }
+
+        function cashOut(auto){
+        if(!gameActive) return;
+        const winnings=Math.floor(bet*multiplier);
+        balance+=winnings;
+        const profit=winnings-bet;
+        sessionProfit+=profit;
+        gameActive=false;
+        revealAll();
+        setMsg(auto?'🏆 All gems found! +$'+winnings:'✅ Cashed out $'+winnings+(profit>=0?' (+$'+profit+')':''), 'win');
+        document.getElementById('mainBtn').textContent='Bet';
+        document.getElementById('mainBtn').className='main-btn';
+        document.getElementById('mineCount').disabled=false;
+        updateUI();
+        }
+
+        function gameOver(auto, totalMines){
+        const loss=bet;
+        sessionProfit-=loss;
+        gameActive=false;
+        revealAll();
+        setMsg('💣 Mine hit! Lost $'+bet, 'lose');
+        document.getElementById('mainBtn').textContent='Bet';
+        document.getElementById('mainBtn').className='main-btn';
+        document.getElementById('mineCount').disabled=false;
+        multiplier=0;
+        updateUI();
+        }
+
+        function revealAll(){
+        document.querySelectorAll('.tile').forEach((tile,idx)=>{
+        if(!tile.classList.contains('revealed')){
+        tile.classList.add('revealed');
+        if(minePositions.has(idx)){tile.classList.add('mine');tile.innerHTML='💣';}
+        else{tile.style.opacity='0.4';tile.innerHTML='💎';}
+        }
+        });
+        }
+
+        function setMsg(txt, type){
+        const el=document.getElementById('resultMsg');
+        el.textContent=txt;
+        el.className='result-msg'+(type?' '+type:'');
+        }
+
+        createBoard();
+        updateUI();
+        <\/script>
+        </body>
+        </html>`;
+
         // ── NAVIGATION ─────────────────────────────────────────────────────
-        const loaded = { football: false, cookie: false, rocket: false, siege: false };
+        const loaded = { football: false, cookie: false, rocket: false, siege: false, mines: false };
 
         function openGame(id) {
         if (!loaded[id]) {
-        const src = { football: FOOTBALL_SRC, cookie: COOKIE_SRC, rocket: ROCKET_SRC, siege: SIEGE_SRC }[id];
+        const src = { football: FOOTBALL_SRC, cookie: COOKIE_SRC, rocket: ROCKET_SRC, siege: SIEGE_SRC, mines: MINES_SRC }[id];
         document.getElementById('frame-' + id).srcdoc = src;
         loaded[id] = true;
         }
@@ -959,4 +1167,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
